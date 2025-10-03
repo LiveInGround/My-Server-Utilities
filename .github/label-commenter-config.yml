@@ -1,0 +1,70 @@
+comment:
+  footer: "\
+    ----\n\n
+    > [!NOTE]\n
+    > *This is an automated response created by a **GitHub Action***<br>
+    > *Mentioning the bot won't have any effect!*
+    "
+
+labels:
+  - name: 'Outdated'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+          
+          It seems that you are using an old version of AdminCraft, causing this issue. You should download the latest release via the release page.
+          
+          This issue will be automatically closed.
+        action: close
+  - name: 'Offline mode'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+          
+          AdminCraft uses U.U.I.D. to safely apply sanctions on players. Offline mode uses offline U.U.I.D.s, which are completely differents, and might not work. Try enabling the online mode in 'server.properties'.
+          
+          This issue will be automatically closed.
+        action: close
+  - name: 'Duplicate'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+
+          It seems that this issue has already been reported to our contributors. If you think this is an error, please reopen the issue. Thank you for taking your time to report issue.
+
+          This issue will be automatically closed.
+        action: close
+  - name: 'Invalid'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+          
+          It seems that your description is not valid, or some items are missing. Please provide missing items and fill the form correctly.
+    unlabeled:
+      issue:
+        body: |-
+          Thank you for respecting the form and adding informations.
+  - name: 'Wontfix'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+
+          This issue/request will not be done for various reasons, but we appreciate your contribution.
+
+          This issue will be closed automatically.
+        action: close
+  - name: 'Client side'
+    labeled:
+      issue:
+        body: |-
+          Hello @{{ issue.user.login }},
+
+          AdminCraft doesn't support client side, as it is designed for server moderation. Try removing the mod from your client, and installing it on a server.
+
+          This issue will be closed automatically.
+        action: close

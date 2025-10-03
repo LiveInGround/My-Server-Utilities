@@ -1,0 +1,31 @@
+name: Issue Management
+
+on:
+  issues:
+    types:
+    - labeled
+    - unlabeled
+  pull_request_target:
+    types:
+    - labeled
+    - unlabeled
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  give_comment:
+    if: github.event.issue.state == 'open' || github.event.pull_request.state == 'open'
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Send Issue/Pull request comment
+      uses: peaceiris/actions-label-commenter@v1
+      env:
+        RUNNER_DEBUG: 1
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
