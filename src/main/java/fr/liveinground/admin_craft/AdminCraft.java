@@ -12,6 +12,8 @@ import fr.liveinground.admin_craft.mutes.MuteEventsHandler;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
@@ -24,7 +26,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -63,8 +64,6 @@ public class AdminCraft {
 
     @SubscribeEvent
     public void onCommandRegister(RegisterCommandsEvent event) {
-        CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-
         MuteCommand.register(event.getDispatcher());
         AltCommand.register(event.getDispatcher());
         if (Config.enable_sanction_cmd) {
@@ -163,11 +162,8 @@ public class AdminCraft {
 
     @SubscribeEvent
     public void onPvP(AttackEntityEvent e) {
-        boolean targetCondition;
         Entity target = e.getTarget();
         Player attacker = e.getEntity();
-        BlockPos targetPos = target.getOnPos();
-        BlockPos attackerPos = attacker.getOnPos();
 
         if (target instanceof Player) {
             if (attacker.hasPermissions(Config.sp_op_level)) return;
@@ -184,10 +180,11 @@ public class AdminCraft {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         if (isInSP(player.level(), player.getOnPos())) {
             for (MobEffect effect: Config.sp_effects) {
-                player.addEffect(new MobEffectInstance(effect, Integer.MAX_VALUE, 255, false, false));
+                Holder<MobEffect> holder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect);
+                MobEffectInstance effectInstance = new MobEffectInstance(holder, Integer.MAX_VALUE, 255, false, false, false);
+                player.addEffect(effectInstance);
             }
-            if (player.getTags().contains(SP_TAG)) return;
-            else {
+            if (!player.getTags().contains(SP_TAG)) {
                 player.addTag(SP_TAG);
                 serverPlayer.displayClientMessage(Component.literal(Config.sp_enter_msg).withStyle(ChatFormatting.GREEN), true);
             }
@@ -195,7 +192,8 @@ public class AdminCraft {
             if (player.getTags().contains(SP_TAG)){
                 player.removeTag(SP_TAG);
                 for (MobEffect effect: Config.sp_effects) {
-                    e.getEntity().removeEffect(effect);
+                    Holder<MobEffect> holder = BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect);
+                    e.getEntity().removeEffect(holder);
                 }
                 serverPlayer.displayClientMessage(Component.literal(Config.sp_leave_msg).withStyle(ChatFormatting.RED), true);
             }

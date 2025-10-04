@@ -3,19 +3,20 @@ package fr.liveinground.admin_craft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Mod.EventBusSubscriber(modid = AdminCraft.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Config {
 
-    private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
+    private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
     static {
         BUILDER.push("spawnProtection");
@@ -126,46 +127,46 @@ public class Config {
         BUILDER.pop();
     }
 
-    static final ForgeConfigSpec SPEC = BUILDER.build();
+    static final ModConfigSpec   SPEC = BUILDER.build();
 
-    private static ForgeConfigSpec.BooleanValue ENABLE_SPAWN_PROTECTION;
-    private static ForgeConfigSpec.IntValue SP_OP_LEVEL;
-    private static ForgeConfigSpec.IntValue SPAWN_PROTECTION_CENTER_X;
-    private static ForgeConfigSpec.IntValue SPAWN_PROTECTION_CENTER_Z;
-    private static ForgeConfigSpec.IntValue SPAWN_PROTECTION_RADIUS;
-    private static ForgeConfigSpec.BooleanValue ALLOW_PVP;
-    private static ForgeConfigSpec.BooleanValue ALLOW_EXPLOSION;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> ALLOWED_BLOCKS;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> SP_EFFECTS;
+    private static ModConfigSpec.BooleanValue ENABLE_SPAWN_PROTECTION;
+    private static ModConfigSpec.IntValue SP_OP_LEVEL;
+    private static ModConfigSpec.IntValue SPAWN_PROTECTION_CENTER_X;
+    private static ModConfigSpec.IntValue SPAWN_PROTECTION_CENTER_Z;
+    private static ModConfigSpec.IntValue SPAWN_PROTECTION_RADIUS;
+    private static ModConfigSpec.BooleanValue ALLOW_PVP;
+    private static ModConfigSpec.BooleanValue ALLOW_EXPLOSION;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> ALLOWED_BLOCKS;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> SP_EFFECTS;
 
-    private static ForgeConfigSpec.BooleanValue ENABLE_SPAWN_OVERRIDE;
-    private static ForgeConfigSpec.IntValue SPAWN_X;
-    private static ForgeConfigSpec.IntValue SPAWN_Y;
-    private static ForgeConfigSpec.IntValue SPAWN_Z;
+    private static ModConfigSpec.BooleanValue ENABLE_SPAWN_OVERRIDE;
+    private static ModConfigSpec.IntValue SPAWN_X;
+    private static ModConfigSpec.IntValue SPAWN_Y;
+    private static ModConfigSpec.IntValue SPAWN_Z;
 
-    private static ForgeConfigSpec.ConfigValue<String> SPAWN_PROTECTION_ENTER;
-    private static ForgeConfigSpec.ConfigValue<String> SPAWN_PROTECTION_LEAVE;
-        private static ForgeConfigSpec.ConfigValue<String> MUTE_MESSAGE;
-        private static ForgeConfigSpec.ConfigValue<String> MUTE_MESSAGE_NO_REASON;
-        private static ForgeConfigSpec.ConfigValue<String> MUTE_SUCCESS;
-        private static ForgeConfigSpec.ConfigValue<String> MUTE_FAILED_ALREADY_MUTED;
-        private static ForgeConfigSpec.ConfigValue<String> UNMUTE_MESSAGE;
-        private static ForgeConfigSpec.ConfigValue<String> UNMUTE_SUCCESS;
-        private static ForgeConfigSpec.ConfigValue<String> UNMUTE_FAILED_NOT_MUTED;
+    private static ModConfigSpec.ConfigValue<String> SPAWN_PROTECTION_ENTER;
+    private static ModConfigSpec.ConfigValue<String> SPAWN_PROTECTION_LEAVE;
+        private static ModConfigSpec.ConfigValue<String> MUTE_MESSAGE;
+        private static ModConfigSpec.ConfigValue<String> MUTE_MESSAGE_NO_REASON;
+        private static ModConfigSpec.ConfigValue<String> MUTE_SUCCESS;
+        private static ModConfigSpec.ConfigValue<String> MUTE_FAILED_ALREADY_MUTED;
+        private static ModConfigSpec.ConfigValue<String> UNMUTE_MESSAGE;
+        private static ModConfigSpec.ConfigValue<String> UNMUTE_SUCCESS;
+        private static ModConfigSpec.ConfigValue<String> UNMUTE_FAILED_NOT_MUTED;
 
-        private static ForgeConfigSpec.ConfigValue<String> MUTE_MESSAGE_CANCELLED;
-        private static ForgeConfigSpec.ConfigValue<String> CANCEL_LOG_FORMAT;
-        private static ForgeConfigSpec.BooleanValue MUTE_PREVENT_SIGN_PLACING;
-        private static ForgeConfigSpec.BooleanValue ALLOW_MESSAGES_TO_OPS;
-        private static ForgeConfigSpec.BooleanValue LOG_CANCELLED_EVENTS;
+        private static ModConfigSpec.ConfigValue<String> MUTE_MESSAGE_CANCELLED;
+        private static ModConfigSpec.ConfigValue<String> CANCEL_LOG_FORMAT;
+        private static ModConfigSpec.BooleanValue MUTE_PREVENT_SIGN_PLACING;
+        private static ModConfigSpec.BooleanValue ALLOW_MESSAGES_TO_OPS;
+        private static ModConfigSpec.BooleanValue LOG_CANCELLED_EVENTS;
 
-    private static ForgeConfigSpec.IntValue MUTE_LEVEL;
-    private static ForgeConfigSpec.ConfigValue<List<? extends String>> MUTE_FORBIDDEN_CMD;
+    private static ModConfigSpec.IntValue MUTE_LEVEL;
+    private static ModConfigSpec.ConfigValue<List<? extends String>> MUTE_FORBIDDEN_CMD;
 
-    private static ForgeConfigSpec.IntValue ALT_LEVEL;
+    private static ModConfigSpec.IntValue ALT_LEVEL;
 
-    private static ForgeConfigSpec.BooleanValue ENABLE_SANC;
-    private static ForgeConfigSpec.IntValue SANC_LEVEL;
+    private static ModConfigSpec.BooleanValue ENABLE_SANC;
+    private static ModConfigSpec.IntValue SANC_LEVEL;
 
     public static boolean sp_enabled;
     public static int sp_op_level;
@@ -211,7 +212,7 @@ public class Config {
         ResourceLocation rl = ResourceLocation.tryParse(blockName);
         if (rl == null) return false;
 
-        return ForgeRegistries.BLOCKS.containsKey(rl);
+        return BuiltInRegistries.BLOCK.containsKey(rl);
     }
 
     private static boolean validateEffectName(final Object obj) {
@@ -220,7 +221,7 @@ public class Config {
         ResourceLocation rl = ResourceLocation.tryParse(effectName);
         if (rl == null) return false;
 
-        return ForgeRegistries.MOB_EFFECTS.containsKey(rl);
+        return BuiltInRegistries.MOB_EFFECT.containsKey(rl);
     }
 
     private static boolean validateString(final Object obj) {
@@ -237,10 +238,10 @@ public class Config {
         sp_pvp_enabled = ALLOW_PVP.get();
         sp_explosion_enabled = ALLOW_EXPLOSION.get();
         allowedBlocks = ALLOWED_BLOCKS.get().stream()
-                .map(blockName -> ForgeRegistries.BLOCKS.getValue(ResourceLocation.tryParse(blockName)))
+                .map(blockName -> BuiltInRegistries.BLOCK.get(ResourceLocation.tryParse(blockName)))
                 .collect(Collectors.toSet());
         sp_effects = SP_EFFECTS.get().stream()
-                .map(effectName -> ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.tryParse(effectName)))
+                .map(effectName -> BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.tryParse(effectName)))
                 .collect(Collectors.toSet());
 
         spawn_override = ENABLE_SPAWN_OVERRIDE.get();
